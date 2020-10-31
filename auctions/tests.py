@@ -1,6 +1,7 @@
 from django.test import TestCase
 from .models import Category
-class FlightTestCase(TestCase):
+
+class CommercialTestCase(TestCase):
 
     def setUp(self):
         #c1 = Category.objects.create(group_name = "Books", description = "There are a lot of different books")
