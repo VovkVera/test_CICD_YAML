@@ -1,10 +1,12 @@
 from django.test import TestCase
 
-from .models import Category
+from .models import Category, User
 
 class CommercialTestCase(TestCase):
 
     def setUp(self):
+        u = User.objects.create(username = 'Vera', email = 'v@g.com', password = '123', confirmation = '123')
+        u.save()
         #c1 = Category.objects.create(group_name = "Books", description = "There are a lot of different books")
         c1 = Category.objects.create(group_name = "A", description = "aa")
         c1.save()
