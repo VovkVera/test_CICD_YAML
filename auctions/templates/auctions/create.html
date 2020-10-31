@@ -1,0 +1,32 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h2>Create new auction</h2>
+
+    <form action="{% url 'add' %}" method="POST">
+        {% csrf_token %}
+        <input name="user_id" type="hidden" value="{{user.id}}">
+        <div class="form-group">
+            name:
+            {{form.product_name}}
+        </div>
+        <div class="form-group">
+            Category:
+            {{form.category}}
+        </div>
+         <div class="form-group">
+             price:
+             {{form.price}}
+        </div>
+        <div>
+            <textarea name="description" cols="30" rows="10" placeholder="описание товара/услуги"></textarea>
+        </div>
+         <div class="form-group">
+            <input class="form-control" autofocus type="text" name="img_url" placeholder="photo of product">
+        </div>
+        <button type="submit">Add</button>
+    </form>
+
+
+{% endblock %}

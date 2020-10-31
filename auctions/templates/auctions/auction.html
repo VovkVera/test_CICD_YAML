@@ -1,0 +1,96 @@
+{% extends "auctions/layout.html" %}
+{% block title %}
+    {{auction.product_name}}
+{% endblock %}
+
+{% block body %}
+    <h2>Listing: {{ auction.product_name }}</h2>
+<hr>
+
+ <ul>
+        {% for comment in comments %}
+     <li><strong>{{ comment.user }}:</strong> {{comment.text}} </li>
+        {% endfor %}
+    </ul>
+
+<form action="{% url 'leave_comment' auction.id %}" method="post">
+    {% csrf_token %}
+    <input name="user" type="hidden" value="{{user.id}}">
+    <input name="auction" type="hidden" value="{{auction.id}}">
+     Оставьте свой комментарий:
+{{commentForm.text}}
+    <button>submit</button>
+</form>
+<hr>
+        <div>
+            {% if user.is_authenticated %}
+            Listened by {{count}} people:
+                    {% if user.id in w_id_list %}
+                        {{user}} отслеживает аукцион {{auction.product_name}}
+
+             <form action="{% url 'del_from_watch' %}" method="POST">
+                  {% csrf_token %}
+                     <input name="user" type="hidden" value="{{user.id}}">
+                     <input name="auction" type="hidden" value="{{auction.id}}">
+                 <button>UnWatch</button>
+
+             </form>
+                    {% else %}
+                        {{user}} НЕ отслеживает аукцион {{auction.product_name}}
+
+             <form action="{% url 'add_to_watchlist' %}" method="POST">
+                  {% csrf_token %}
+                     <input name="user" type="hidden" value="{{user.id}}">
+                     <input name="auction" type="hidden" value="{{auction.id}}">
+                 <button>Add to Watch</button>
+
+             </form>
+                    {% endif %}
+<br>
+            {% else %}
+
+                <!-- вот тут было бы круто сделать книпочку что бы добавить в список наблюдаемых аукционов войдите в аккаунт-->
+            {% endif %}
+        </div>
+
+
+    <img src="{{ auction.img_url }}" width="100px">
+<div>{{ auction.description }}</div>
+<div><h2>$ {{ auction.price }}</h2></div>
+
+{% if user.is_authenticated %}
+        {% if auction.active %}
+                            {% if request.GET.lowbid %}
+                                <p>You can better!</p>
+                            {% endif %}
+                    <form action="{% url 'bid' %}" method="POST">
+                            {% csrf_token %}
+                            <input name="user" type="hidden" value="{{user.id}}">
+                            <input name="auction" type="hidden" value="{{auction.id}}">
+                            {{bidform.new_price}}
+                            <button>Place Bid</button>
+                    </form>
+
+                    {% if user.id == auction.user.id %}
+
+                            <form action="{% url 'close_auction' %}" method="POST">
+                              {% csrf_token %}
+                                <input name="auction" type="hidden" value="{{auction.id}}">
+                                <input name="winner_id" type="hidden" value="{{user.id}}">
+
+                                <button>Close the Auction</button>
+                             </form>
+
+                    {% endif %}
+
+        {% else %}
+                {% if auction.winner_id == user.id %}
+                        You wined this auction!!!
+                {% else %}
+                        The auction is closed.
+                {% endif %}
+
+        {% endif %}
+{% endif %}
+
+{% endblock %}
