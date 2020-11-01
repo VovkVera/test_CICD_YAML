@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from .models import Category, User
+#from .models import Category, User
 
 '''class CommercialTestCase(TestCase):
 
