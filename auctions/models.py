@@ -71,4 +71,3 @@ class Watch(models.Model):
 class Category(models.Model):
     group_name = models.CharField(max_length=54)
     description = models.TextField()
-
